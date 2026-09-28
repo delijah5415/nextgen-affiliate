@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import productsData from "@/data/products.json";
-import PayPalButton from "@/components/PayPalButton"; // <-- Import PayPal Button
+import productsData from "../data/products.json";
+import PayPalButton from "../components/PayPalButton"; // <-- Import PayPal Button
 
 const categories = ["All", "Banking", "Fintech", "Software", "Crypto"];
 
