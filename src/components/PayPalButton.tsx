@@ -6,7 +6,7 @@ import { useState, useEffect } from "react";
 declare global {
   interface Window {
     paypal?: {
-      HostedButtons: (config: { hostedButtonId: string }) => {
+      HostedButtons?: (config: { hostedButtonId: string }) => {
         render: (containerSelector: string) => void;
       };
     };
@@ -18,17 +18,15 @@ export default function PayPalButton() {
   const [hasError, setHasError] = useState(false);
 
   const initPayPal = () => {
-    if (window.paypal && window.paypal.HostedButtons) {
+    if (typeof window !== "undefined" && window.paypal && typeof window.paypal.HostedButtons === "function") {
       try {
         const container = document.getElementById("paypal-container-8KQJ5C3KWJWYU");
         if (container) {
-          container.innerHTML = ""; // Clear existing instance/loader
+          container.innerHTML = "";
         }
-        window.paypal
-          .HostedButtons({
-            hostedButtonId: "8KQJ5C3KWJWYU",
-          })
-          .render("#paypal-container-8KQJ5C3KWJWYU");
+        window.paypal.HostedButtons({
+          hostedButtonId: "8KQJ5C3KWJWYU",
+        }).render("#paypal-container-8KQJ5C3KWJWYU");
         setIsLoaded(true);
       } catch (err) {
         console.error("PayPal Hosted Buttons render error:", err);
@@ -38,8 +36,7 @@ export default function PayPalButton() {
   };
 
   useEffect(() => {
-    // Check if script was already cached/loaded on client navigation
-    if (window.paypal && window.paypal.HostedButtons) {
+    if (typeof window !== "undefined" && window.paypal && typeof window.paypal.HostedButtons === "function") {
       initPayPal();
     }
   }, []);
@@ -47,7 +44,7 @@ export default function PayPalButton() {
   return (
     <div className="flex flex-col items-center justify-center p-2 bg-slate-900/60 rounded-xl border border-slate-800 min-h-[50px]">
       <Script
-        src="https://www.paypal.com/sdk/js?client-id=sb&components=hosted-buttons&enable-funding=venmo"
+        src="https://www.paypal.com/sdk/js?client-id=BAA&components=hosted-buttons&enable-funding=venmo"
         onLoad={initPayPal}
         onError={() => setHasError(true)}
         strategy="lazyOnload"
