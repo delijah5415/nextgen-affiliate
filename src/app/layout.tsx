@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import Script from "next/script";
+import GoogleAdsense from "@/components/GoogleAdsense";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -15,17 +15,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="dark scroll-smooth">
-      <head>
-        {/* Safely load Google AdSense without crashing hydration if blocked */}
-        <Script
-          async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8251495052020406"
-          crossOrigin="anonymous"
-          strategy="lazyOnload"
-        />
-      </head>
       <body className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans antialiased selection:bg-indigo-500 selection:text-white">
         
+        {/* Isolated AdSense Script */}
+        <GoogleAdsense />
+
         {/* Header */}
         <header className="sticky top-0 z-50 backdrop-blur-md bg-slate-950/80 border-b border-slate-800/80">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
@@ -55,7 +49,7 @@ export default function RootLayout({
           </div>
         </header>
 
-        {/* Main */}
+        {/* Main Content */}
         <main className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           {children}
         </main>
