@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import GoogleAdsense from "../components/GoogleAdsense";
+import GoogleAdsense from "@/components/GoogleAdsense";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -17,7 +17,7 @@ export default function RootLayout({
     <html lang="en" className="dark scroll-smooth">
       <body className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans antialiased selection:bg-indigo-500 selection:text-white">
         
-        {/* Isolated AdSense Script */}
+        {/* Isolated AdSense Script Wrapper */}
         <GoogleAdsense />
 
         {/* Header */}
