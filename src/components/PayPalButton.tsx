@@ -16,33 +16,35 @@ export default function PayPalButton() {
           if (container) {
             container.innerHTML = "";
           }
-          paypal.Buttons({
-            style: {
-              layout: "vertical",
-              color: "gold",
-              shape: "rect",
-              label: "paypal",
-            },
-            createOrder: (_data: any, actions: any) => {
-              return actions.order.create({
-                purchase_units: [
-                  {
-                    amount: {
-                      value: "10.00",
+          paypal
+            .Buttons({
+              style: {
+                layout: "vertical",
+                color: "gold",
+                shape: "rect",
+                label: "paypal",
+              },
+              createOrder: (_data: any, actions: any) => {
+                return actions.order.create({
+                  purchase_units: [
+                    {
+                      amount: {
+                        value: "10.00",
+                      },
                     },
-                  },
-                ],
-              });
-            },
-            onApprove: async (_data: any, actions: any) => {
-              const details = await actions.order.capture();
-              alert(`Transaction completed by ${details.payer.name.given_name}`);
-            },
-            onError: (err: any) => {
-              console.error("PayPal Button Error:", err);
-              setHasError(true);
-            },
-          }).render("#paypal-button-container");
+                  ],
+                });
+              },
+              onApprove: async (_data: any, actions: any) => {
+                const details = await actions.order.capture();
+                alert(`Transaction completed by ${details.payer.name.given_name}`);
+              },
+              onError: (err: any) => {
+                console.error("PayPal Button Error:", err);
+                setHasError(true);
+              },
+            })
+            .render("#paypal-button-container");
 
           setIsLoaded(true);
         } catch (err) {
@@ -71,7 +73,7 @@ export default function PayPalButton() {
         strategy="lazyOnload"
       />
 
-      <div id="paypal-button-container" className="w-full max-w-xs">
+      <div id="paypal-button-container" className="w-full max-w-xs min-h-[40px] flex items-center justify-center">
         {!isLoaded && !hasError && (
           <div className="text-slate-400 text-xs animate-pulse text-center py-3">
             Loading PayPal Button...

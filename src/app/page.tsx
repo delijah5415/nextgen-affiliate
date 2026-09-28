@@ -1,8 +1,27 @@
-import dynamic from "next/dynamic";
-import productsData from "@/data/products.json";
+"use client";
 
-// Disable SSR for PayPal button to prevent ad-blocker hydration crashes
-const PayPalButton = dynamic(() => import("@/components/PayPalButton"), {
+import dynamic from "next/dynamic";
+
+// Fallback product data directly in case products.json is missing or not committed
+const productsData = [
+  {
+    id: "1",
+    name: "FinTech Pro Suite",
+    category: "Financial Tool",
+    description: "Advanced analytics and automated portfolio tracking software.",
+    link: "https://example.com"
+  },
+  {
+    id: "2",
+    name: "DevCloud Infrastructure",
+    category: "Developer Tool",
+    description: "High-performance server management and deployment platform.",
+    link: "https://example.com"
+  }
+];
+
+// Safely dynamically import PayPalButton with SSR disabled
+const PayPalButton = dynamic(() => import("../components/PayPalButton"), {
   ssr: false,
   loading: () => (
     <div className="w-full text-center py-3 text-xs text-slate-400 animate-pulse">
@@ -30,14 +49,14 @@ export default function Home() {
           Featured Directory
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {productsData.map((product: any) => (
+          {productsData.map((product) => (
             <div
               key={product.id}
               className="bg-slate-900/50 border border-slate-800 rounded-2xl p-6 flex flex-col justify-between hover:border-slate-700 transition-all shadow-lg"
             >
               <div>
                 <span className="text-xs font-semibold uppercase tracking-wider text-indigo-400 bg-indigo-950/60 px-2.5 py-1 rounded-full border border-indigo-800/50">
-                  {product.category || "Tool"}
+                  {product.category}
                 </span>
                 <h3 className="text-xl font-bold text-slate-100 mt-3 mb-2">
                   {product.name}
@@ -64,7 +83,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Direct Payment / Support Section */}
+      {/* Direct Payment Section */}
       <section className="bg-slate-900/40 border border-slate-800/80 rounded-2xl p-6 sm:p-8 max-w-xl mx-auto text-center space-y-4">
         <h3 className="text-xl font-bold text-slate-100">Support Platform Development</h3>
         <p className="text-slate-400 text-sm">
