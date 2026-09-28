@@ -19,8 +19,7 @@ export default function GoogleAdsense() {
       crossOrigin="anonymous"
       strategy="afterInteractive"
       onError={(e) => {
-        // Silently swallow ad-blocker network block errors
-        console.warn("Google AdSense script was blocked by browser/ad-blocker.", e);
+        console.warn("Google AdSense script blocked by client.", e);
       }}
     />
   );

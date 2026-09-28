@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import GoogleAdsense from "@/components/GoogleAdsense";
+import GoogleAdsense from "../components/GoogleAdsense";
 import "./globals.css";
 
 export const metadata: Metadata = {
