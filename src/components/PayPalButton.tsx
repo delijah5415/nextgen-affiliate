@@ -3,7 +3,6 @@
 import Script from "next/script";
 import { useState } from "react";
 
-// Extend global window interface for TypeScript
 declare global {
   interface Window {
     paypal?: {
@@ -29,19 +28,16 @@ export default function PayPalButton() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center p-4 bg-slate-900/60 rounded-xl border border-slate-800">
-      {/* PayPal SDK Script with Hosted Buttons component enabled */}
+    <div className="flex flex-col items-center justify-center p-2 bg-slate-900/60 rounded-xl border border-slate-800">
       <Script
         src="https://www.paypal.com/sdk/js?client-id=BAA&components=hosted-buttons&enable-funding=venmo"
         onLoad={handleScriptLoad}
         strategy="lazyOnload"
       />
-
-      {/* Target Container where PayPal renders the button */}
-      <div id="paypal-container-8KQJ5C3KWJWYU" className="min-h-[50px] w-full max-w-xs flex justify-center">
+      <div id="paypal-container-8KQJ5C3KWJWYU" className="min-h-[40px] w-full max-w-xs flex justify-center items-center">
         {!isLoaded && (
-          <div className="text-slate-400 text-sm animate-pulse py-2">
-            Loading PayPal Button...
+          <div className="text-slate-400 text-xs animate-pulse py-1">
+            Loading PayPal...
           </div>
         )}
       </div>
