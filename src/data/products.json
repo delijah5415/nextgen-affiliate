@@ -1,0 +1,57 @@
+[
+  {
+    "id": "1",
+    "company": "Mercury",
+    "badge": "Top Pick",
+    "title": "Startup Business Banking",
+    "description": "FDIC-insured banking, USD accounts, cards, and free wire transfers tailored for tech startups and online businesses.",
+    "category": "Banking",
+    "nicheTag": "Startups & Founders",
+    "link": "https://mercury.com",
+    "icon": "🏦"
+  },
+  {
+    "id": "2",
+    "company": "Wise",
+    "badge": "Low Fee",
+    "title": "International Multi-Currency Account",
+    "description": "Send, spend, and receive money globally at real mid-market exchange rates with minimal foreign exchange fees.",
+    "category": "Fintech",
+    "nicheTag": "Digital Nomads",
+    "link": "https://wise.com",
+    "icon": "💳"
+  },
+  {
+    "id": "3",
+    "company": "Notion",
+    "badge": "Popular",
+    "title": "All-in-One Workspace & AI",
+    "description": "Organize your company knowledge, project pipelines, and docs with integrated AI generation capabilities.",
+    "category": "Software",
+    "nicheTag": "Productivity",
+    "link": "https://notion.so",
+    "icon": "📝"
+  },
+  {
+    "id": "4",
+    "company": "Ledger",
+    "badge": "Essential",
+    "title": "Nano X Hardware Crypto Wallet",
+    "description": "Securely store your crypto assets and NFTs offline with industry-leading cold storage encryption.",
+    "category": "Crypto",
+    "nicheTag": "Security",
+    "link": "https://ledger.com",
+    "icon": "🔐"
+  },
+  {
+    "id": "5",
+    "company": "Brex",
+    "badge": "High Rewards",
+    "title": "Corporate Card & Spend Management",
+    "description": "Corporate cards with custom limit spending controls and automated receipt matching.",
+    "category": "Banking",
+    "nicheTag": "E-Commerce",
+    "link": "https://brex.com",
+    "icon": "💳"
+  }
+]
