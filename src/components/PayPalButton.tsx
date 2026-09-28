@@ -3,68 +3,91 @@
 import Script from "next/script";
 import { useState, useEffect } from "react";
 
-declare global {
-  interface Window {
-    paypal?: {
-      HostedButtons?: (config: { hostedButtonId: string }) => {
-        render: (containerSelector: string) => void;
-      };
-    };
-  }
-}
-
 export default function PayPalButton() {
   const [isLoaded, setIsLoaded] = useState(false);
   const [hasError, setHasError] = useState(false);
 
   const initPayPal = () => {
-    if (typeof window !== "undefined" && window.paypal && typeof window.paypal.HostedButtons === "function") {
-      try {
-        const container = document.getElementById("paypal-container-8KQJ5C3KWJWYU");
-        if (container) {
-          container.innerHTML = "";
+    if (typeof window !== "undefined") {
+      const paypal = (window as any).paypal;
+      if (paypal && typeof paypal.Buttons === "function") {
+        try {
+          const container = document.getElementById("paypal-button-container");
+          if (container) {
+            container.innerHTML = "";
+          }
+          paypal.Buttons({
+            style: {
+              layout: "vertical",
+              color: "gold",
+              shape: "rect",
+              label: "paypal",
+            },
+            createOrder: (_data: any, actions: any) => {
+              return actions.order.create({
+                purchase_units: [
+                  {
+                    amount: {
+                      value: "10.00",
+                    },
+                  },
+                ],
+              });
+            },
+            onApprove: async (_data: any, actions: any) => {
+              const details = await actions.order.capture();
+              alert(`Transaction completed by ${details.payer.name.given_name}`);
+            },
+            onError: (err: any) => {
+              console.error("PayPal Button Error:", err);
+              setHasError(true);
+            },
+          }).render("#paypal-button-container");
+
+          setIsLoaded(true);
+        } catch (err) {
+          console.error("PayPal render error:", err);
+          setHasError(true);
         }
-        window.paypal.HostedButtons({
-          hostedButtonId: "8KQJ5C3KWJWYU",
-        }).render("#paypal-container-8KQJ5C3KWJWYU");
-        setIsLoaded(true);
-      } catch (err) {
-        console.error("PayPal Hosted Buttons render error:", err);
-        setHasError(true);
       }
     }
   };
 
   useEffect(() => {
-    if (typeof window !== "undefined" && window.paypal && typeof window.paypal.HostedButtons === "function") {
-      initPayPal();
+    if (typeof window !== "undefined") {
+      const paypal = (window as any).paypal;
+      if (paypal && typeof paypal.Buttons === "function") {
+        initPayPal();
+      }
     }
   }, []);
 
   return (
-    <div className="flex flex-col items-center justify-center p-2 bg-slate-900/60 rounded-xl border border-slate-800 min-h-[50px]">
+    <div className="w-full flex flex-col items-center justify-center p-4 bg-slate-900/60 rounded-xl border border-slate-800">
       <Script
-        src="https://www.paypal.com/sdk/js?client-id=BAA&components=hosted-buttons&enable-funding=venmo"
+        src="https://www.paypal.com/sdk/js?client-id=test&currency=USD"
         onLoad={initPayPal}
         onError={() => setHasError(true)}
         strategy="lazyOnload"
       />
 
-      <div id="paypal-container-8KQJ5C3KWJWYU" className="w-full max-w-xs flex justify-center items-center">
+      <div id="paypal-button-container" className="w-full max-w-xs">
         {!isLoaded && !hasError && (
-          <div className="text-slate-400 text-xs animate-pulse py-1">
-            Loading PayPal...
+          <div className="text-slate-400 text-xs animate-pulse text-center py-3">
+            Loading PayPal Button...
           </div>
         )}
         {hasError && (
-          <a
-            href="https://www.paypal.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-xs text-indigo-400 hover:underline py-1"
-          >
-            Pay with PayPal ↗
-          </a>
+          <div className="text-center py-2">
+            <a
+              href="https://www.paypal.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-xs text-indigo-400 hover:underline"
+            >
+              Pay via PayPal ↗
+            </a>
+          </div>
         )}
       </div>
     </div>
