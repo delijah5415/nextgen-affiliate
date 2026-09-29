@@ -1,9 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
-import { paypalClient } from "@/lib/paypal";
+import { ordersController } from "@/lib/paypal";
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
+
     const orderId = body?.orderID;
 
     if (
@@ -11,25 +12,31 @@ export async function POST(request: NextRequest) {
       !/^[A-Z0-9-]+$/i.test(orderId)
     ) {
       return NextResponse.json(
-        { error: "Invalid PayPal order ID." },
-        { status: 400 }
+        {
+          error: "Invalid PayPal order ID.",
+        },
+        {
+          status: 400,
+        }
       );
     }
 
-    const response = await paypalClient.orders.captureOrder({
+    const response = await ordersController.captureOrder({
       id: orderId,
       body: {},
     });
 
-    const result = response.result;
-
-    return NextResponse.json(result);
+    return NextResponse.json(response.result);
   } catch (error) {
     console.error("PayPal capture-order error:", error);
 
     return NextResponse.json(
-      { error: "Unable to capture PayPal order." },
-      { status: 500 }
+      {
+        error: "Unable to capture PayPal order.",
+      },
+      {
+        status: 500,
+      }
     );
   }
 }

@@ -2,6 +2,7 @@ import {
   Client,
   Environment,
   LogLevel,
+  OrdersController,
 } from "@paypal/paypal-server-sdk";
 
 const clientId = process.env.PAYPAL_CLIENT_ID;
@@ -37,3 +38,5 @@ export const paypalClient = new Client({
     },
   },
 });
+
+export const ordersController = new OrdersController(paypalClient);

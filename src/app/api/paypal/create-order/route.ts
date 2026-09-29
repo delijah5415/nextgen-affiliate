@@ -1,11 +1,14 @@
 import { NextResponse } from "next/server";
-import { paypalClient } from "@/lib/paypal";
+import {
+  CheckoutPaymentIntent,
+} from "@paypal/paypal-server-sdk";
+import { ordersController } from "@/lib/paypal";
 
 export async function POST() {
   try {
-    const response = await paypalClient.orders.createOrder({
+    const response = await ordersController.createOrder({
       body: {
-        intent: "CAPTURE",
+        intent: CheckoutPaymentIntent.Capture,
         purchaseUnits: [
           {
             amount: {
@@ -24,8 +27,12 @@ export async function POST() {
       console.error("PayPal did not return an order ID.", result);
 
       return NextResponse.json(
-        { error: "PayPal did not return an order ID." },
-        { status: 502 }
+        {
+          error: "PayPal did not return an order ID.",
+        },
+        {
+          status: 502,
+        }
       );
     }
 
@@ -36,8 +43,12 @@ export async function POST() {
     console.error("PayPal create-order error:", error);
 
     return NextResponse.json(
-      { error: "Unable to create PayPal order." },
-      { status: 500 }
+      {
+        error: "Unable to create PayPal order.",
+      },
+      {
+        status: 500,
+      }
     );
   }
 }
