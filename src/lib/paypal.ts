@@ -1,42 +1,29 @@
-import {
-  Client,
-  Environment,
-  LogLevel,
-  OrdersController,
-} from "@paypal/paypal-server-sdk";
+// src/lib/paypal.ts
+import { Client, Environment, OrdersController } from "@paypal/paypal-server-sdk";
 
-const clientId = process.env.PAYPAL_CLIENT_ID;
-const clientSecret = process.env.PAYPAL_CLIENT_SECRET;
+let cachedOrdersController: OrdersController | null = null;
 
-if (!clientId) {
-  throw new Error("PAYPAL_CLIENT_ID is not configured.");
+export function getOrdersController(): OrdersController {
+  if (cachedOrdersController) {
+    return cachedOrdersController;
+  }
+
+  const clientId = process.env.PAYPAL_CLIENT_ID;
+  const clientSecret = process.env.PAYPAL_CLIENT_SECRET;
+
+  if (!clientId || !clientSecret) {
+    throw new Error("PAYPAL_CLIENT_ID and PAYPAL_CLIENT_SECRET are not configured.");
+  }
+
+  const client = new Client({
+    environment:
+      process.env.NODE_ENV === "production"
+        ? Environment.Production
+        : Environment.Sandbox,
+    clientId,
+    clientSecret,
+  });
+
+  cachedOrdersController = new OrdersController(client);
+  return cachedOrdersController;
 }
-
-if (!clientSecret) {
-  throw new Error("PAYPAL_CLIENT_SECRET is not configured.");
-}
-
-const environment =
-  process.env.PAYPAL_ENVIRONMENT?.toLowerCase() === "production"
-    ? Environment.Production
-    : Environment.Sandbox;
-
-export const paypalClient = new Client({
-  clientCredentialsAuthCredentials: {
-    oAuthClientId: clientId,
-    oAuthClientSecret: clientSecret,
-  },
-  environment,
-  logging: {
-    logLevel: LogLevel.Error,
-    logRequest: {
-      logBody: false,
-      logHeaders: false,
-    },
-    logResponse: {
-      logHeaders: false,
-    },
-  },
-});
-
-export const ordersController = new OrdersController(paypalClient);
