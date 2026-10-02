@@ -1,38 +1,50 @@
-import { NextRequest, NextResponse } from "next/server";
-import { ordersController } from "@/lib/paypal";
+import { NextResponse } from "next/server";
+import { CheckoutPaymentIntent } from "@paypal/paypal-server-sdk";
+import { getOrdersController } from "@/lib/paypal";
 
-export async function POST(request: NextRequest) {
+export async function POST() {
   try {
-    const body = await request.json();
+    const ordersController = getOrdersController();
 
-    const orderId = body?.orderID;
+    const response = await ordersController.createOrder({
+      body: {
+        intent: CheckoutPaymentIntent.Capture,
+        purchaseUnits: [
+          {
+            amount: {
+              currencyCode: "USD",
+              value: "10.00",
+            },
+            description: "Support Platform Development",
+          },
+        ],
+      },
+    });
 
-    if (
-      typeof orderId !== "string" ||
-      !/^[A-Z0-9-]+$/i.test(orderId)
-    ) {
+    const result = response.result;
+
+    if (!result?.id) {
+      console.error("PayPal did not return an order ID.", result);
+
       return NextResponse.json(
         {
-          error: "Invalid PayPal order ID.",
+          error: "PayPal did not return an order ID.",
         },
         {
-          status: 400,
+          status: 502,
         }
       );
     }
 
-    const response = await ordersController.captureOrder({
-      id: orderId,
-      body: {},
+    return NextResponse.json({
+      id: result.id,
     });
-
-    return NextResponse.json(response.result);
   } catch (error) {
-    console.error("PayPal capture-order error:", error);
+    console.error("PayPal create-order error:", error);
 
     return NextResponse.json(
       {
-        error: "Unable to capture PayPal order.",
+        error: "Unable to create PayPal order.",
       },
       {
         status: 500,
