@@ -1,11 +1,11 @@
 import { NextResponse } from "next/server";
-import {
-  CheckoutPaymentIntent,
-} from "@paypal/paypal-server-sdk";
-import { ordersController } from "@/lib/paypal";
+import { CheckoutPaymentIntent } from "@paypal/paypal-server-sdk";
+import { getOrdersController } from "@/lib/paypal";
 
 export async function POST() {
   try {
+    const ordersController = getOrdersController();
+
     const response = await ordersController.createOrder({
       body: {
         intent: CheckoutPaymentIntent.Capture,
